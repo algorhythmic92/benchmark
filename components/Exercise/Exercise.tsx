@@ -4,9 +4,9 @@ import { Button, Card, Text, TextInput } from 'react-native-paper';
 import ExerciseProps from './Exercise.interface';
 import storage from '@/app/storage';
 
-type Props = PropsWithChildren<{
+interface Props {
   exercise: ExerciseProps;
-}>;
+}
 
 const saveExercise = (
   variation: string,
