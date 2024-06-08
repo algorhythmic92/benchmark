@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.algorhythmic92.lifttracker"
     },
     "android": {
       "adaptiveIcon": {
