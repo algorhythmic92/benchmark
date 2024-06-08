@@ -1,39 +1,11 @@
 import { View } from 'react-native';
-import { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 import { Button, Card, Text, TextInput } from 'react-native-paper';
 import ExerciseProps from './Exercise.interface';
-import storage from '@/app/storage';
 
 interface Props {
   exercise: ExerciseProps;
 }
-
-const saveExercise = (
-  variation: string,
-  name: string,
-  reps: number,
-  weight: number,
-  day: string,
-  month: string,
-  year: string
-) => {
-  storage
-    .save({
-      key: `${variation} ${name}`,
-      data: {
-        reps: reps,
-        weight: weight,
-        dateAchieved: `${day}/${month}/${year}`,
-      },
-      expires: null,
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
 
 export default function Exercise({ exercise }: Props) {
   const { name, personalRecord, dateAchieved, variation } = exercise;
