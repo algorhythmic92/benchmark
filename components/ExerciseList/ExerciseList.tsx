@@ -1,5 +1,5 @@
 import { FlatList, View, ListRenderItem } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Divider, Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
@@ -38,6 +38,10 @@ export default function ExerciseList({ exercises }: Props) {
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
+      <View style={{ padding: 10 }}>
+        <Button mode='outlined'>Add New Exercise</Button>
+      </View>
+      <Divider />
       <FlatList data={exercises} renderItem={renderExercise} />
     </SafeAreaView>
   );
