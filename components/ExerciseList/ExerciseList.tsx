@@ -1,11 +1,9 @@
 import { FlatList, View, ListRenderItem } from 'react-native';
 import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import useLoadExercises from '@/hooks/useLoadExercise';
-import { useEffect, useState } from 'react';
 import useAsyncStorageKeys from '@/hooks/useGetAllKeys';
 
 interface Props {
