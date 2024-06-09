@@ -1,4 +1,4 @@
-package com.algorhythmic92.lifttracker
+package com.algorhythmic92.benchmark
 
 import android.app.Application
 import android.content.res.Configuration

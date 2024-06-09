@@ -1,4 +1,4 @@
-rootProject.name = 'lift-tracker'
+rootProject.name = 'benchmark'
 
 dependencyResolutionManagement {
   versionCatalogs {

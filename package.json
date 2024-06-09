@@ -1,5 +1,5 @@
 {
-  "name": "lift-tracker",
+  "name": "benchmark",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "nuke:all": "rm -rf ./node_modules/ && rm -rf android/build && rm -rf ./android/app/build && rm -rf android/.gradle && rm -rf android/app/.externalNativeBuild && rm -rf android/.idea && rm -rf android/.cxx && rm -rf ios/build && rm -rf ios/Pods && rm -rf ios/Podfile.lock && rm -rf ios/lifttracker.xcworkspace && echo \"Auto generated files removed.\""
+    "nuke:all": "rm -rf ./node_modules/ && rm -rf android/build && rm -rf ./android/app/build && rm -rf android/.gradle && rm -rf android/app/.externalNativeBuild && rm -rf android/.idea && rm -rf android/.cxx && rm -rf ios/build && rm -rf ios/Pods && rm -rf ios/Podfile.lock && rm -rf ios/benchmark.xcworkspace && echo \"Auto generated files removed.\""
   },
   "jest": {
     "preset": "jest-expo"

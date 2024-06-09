@@ -1,4 +1,4 @@
-package com.algorhythmic92.lifttracker
+package com.algorhythmic92.benchmark
 
 import android.os.Build
 import android.os.Bundle
