@@ -22,6 +22,8 @@ export default function Exercise({ exercise }: Props) {
   const [year, setYear] = useState(yearValue);
   const saveExercise = useSaveExercise();
 
+  //Testing
+
   return (
     <View>
       <Card>
