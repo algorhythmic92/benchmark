@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
-import { EXERCISE_VARIATION } from '@/constants/ExerciseVariations';
+import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
 
 const exercises = [
   {
