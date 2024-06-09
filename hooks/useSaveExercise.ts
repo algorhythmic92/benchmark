@@ -1,24 +1,18 @@
 import { useCallback } from 'react';
-import ExerciseProps from '../components/Exercise/Exercise.interface';
-import storage from '@/app/storage';
+import ExerciseProps from '../components/Exercise/interface/Exercise.interface';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const saveExercise = (exerciseFormData: ExerciseProps) => {
-  const {
-    variation,
-    name,
-    personalRecord: { weight, reps },
-    dateAchieved,
-  } = exerciseFormData;
-
-  storage.save({
-    key: `${variation} ${name}`,
-    data: {
-      weight,
-      reps,
-      dateAchieved,
-    },
-    expires: null,
-  });
+const saveExercise = async (exercise: ExerciseProps) => {
+  const { variation, name } = exercise;
+  try {
+    console.log('Storing item');
+    await AsyncStorage.setItem(
+      `${variation} ${name}`,
+      JSON.stringify(exercise)
+    );
+  } catch (err) {
+    console.warn(`Error saving ${variation} ${name}`);
+  }
 };
 
 const useSaveExercise = () => {

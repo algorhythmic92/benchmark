@@ -1,7 +1,12 @@
 import { FlatList, View, ListRenderItem } from 'react-native';
-import { Divider } from 'react-native-paper';
-import Exercise from '../Exercise/Exercise';
-import ExerciseProps from '../Exercise/Exercise.interface';
+import { Text } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Exercise from '@/components/Exercise/Exercise';
+import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
+import useLoadExercises from '@/hooks/useLoadExercise';
+import { useEffect, useState } from 'react';
+import useAsyncStorageKeys from '@/hooks/useGetAllKeys';
 
 interface Props {
   exercises: ExerciseProps[];
@@ -16,9 +21,26 @@ export const renderExercise: ListRenderItem<ExerciseProps> = ({ item }) => (
 );
 
 export default function ExerciseList({ exercises }: Props) {
+  const {
+    keys,
+    isLoading: areKeysLoading,
+    error: keysError,
+  } = useAsyncStorageKeys();
+  const { data, isLoading, error } = useLoadExercises(keys);
+
+  if (isLoading || areKeysLoading) {
+    console.log('Loading...');
+  }
+
+  if (error || keysError) {
+    return <Text>Error: {error}</Text>;
+  }
+
+  console.log('Exercises: ' + JSON.stringify(data));
+
   return (
-    <View style={{ padding: 10 }}>
+    <SafeAreaView style={{ padding: 10 }}>
       <FlatList data={exercises} renderItem={renderExercise} />
-    </View>
+    </SafeAreaView>
   );
 }

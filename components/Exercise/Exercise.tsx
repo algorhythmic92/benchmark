@@ -1,24 +1,26 @@
 import { View } from 'react-native';
 import { useState } from 'react';
 import { Button, Card, Text, TextInput } from 'react-native-paper';
-import ExerciseProps from './Exercise.interface';
+import ExerciseProps from './interface/Exercise.interface';
+import useSaveExercise from '@/hooks/useSaveExercise';
 
 interface Props {
   exercise: ExerciseProps;
 }
 
 export default function Exercise({ exercise }: Props) {
-  const { name, personalRecord, dateAchieved, variation } = exercise;
+  const { name, reps, weight, dateAchieved, variation } = exercise;
   const dateSplit = dateAchieved.split('/');
   const monthValue = dateSplit[0];
   const dayValue = dateSplit[1];
   const yearValue = dateSplit[2];
 
-  const [weight, setWeight] = useState(`${personalRecord.weight}`);
-  const [reps, setReps] = useState(`${personalRecord.reps}`);
+  const [tempWeight, setWeight] = useState(`${weight}`);
+  const [tempReps, setReps] = useState(`${reps}`);
   const [day, setDay] = useState(dayValue);
   const [month, setMonth] = useState(monthValue);
   const [year, setYear] = useState(yearValue);
+  const saveExercise = useSaveExercise();
 
   return (
     <View>
@@ -35,7 +37,7 @@ export default function Exercise({ exercise }: Props) {
             <TextInput
               style={{ flex: 1, marginRight: 10 }}
               label='Weight'
-              value={weight}
+              value={tempWeight}
               onChangeText={(value) => {
                 console.log(value);
                 setWeight(value);
@@ -44,7 +46,7 @@ export default function Exercise({ exercise }: Props) {
             <TextInput
               style={{ flex: 1 }}
               label='Reps'
-              value={reps}
+              value={tempReps}
               onChangeText={(value) => {
                 setReps(`${value}`);
               }}
@@ -90,13 +92,13 @@ export default function Exercise({ exercise }: Props) {
           </View>
           <Button
             onPress={() =>
-              console.log(`
-              name: ${variation} ${name}
-              weight: ${weight}
-              reps: ${reps},
-              date: ${month}/${day}/${year}
-
-            `)
+              saveExercise({
+                variation,
+                name,
+                weight: parseInt(tempWeight, 10),
+                reps: parseInt(tempReps, 10),
+                dateAchieved: `${day}/${month}/${year}`,
+              })
             }
             mode='contained-tonal'>
             Save

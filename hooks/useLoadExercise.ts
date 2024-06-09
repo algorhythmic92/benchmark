@@ -1,24 +1,32 @@
-import storage from '@/app/storage';
-import { useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
+import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 
-const loadExercise = async (name: string, variation: string) => {
-  try {
-    const exercise = await storage.load({
-      key: `${variation} ${name}`,
-      autoSync: true,
-      syncInBackground: true,
-    });
-    return exercise;
-  } catch (err: any) {
-    console.warn(
-      `Error retrieving exercise data from AsyncStorage: \n${err.message}`
-    );
-    return null;
-  }
+const useLoadExercises = (keys: readonly string[]) => {
+  const [data, setData] = useState<ExerciseProps[] | null>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadExercises = async () => {
+      try {
+        const exerciseMatrix = await AsyncStorage.multiGet(keys);
+        const exercises = exerciseMatrix.map((exerciseMatrixCell) =>
+          JSON.parse(exerciseMatrixCell[1] || '')
+        );
+        setData(exercises);
+      } catch (err: any) {
+        console.log('Error loading exercises');
+        setError(err.message);
+      } finally {
+        console.log('Finished loading exercises');
+        setIsLoading(false);
+      }
+    };
+    loadExercises();
+  }, [keys]);
+
+  return { data, isLoading, error };
 };
 
-const useLoadExercise = () => {
-  return useCallback(loadExercise, []);
-};
-
-export default useLoadExercise;
+export default useLoadExercises;

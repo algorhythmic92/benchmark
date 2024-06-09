@@ -1,5 +1,4 @@
-import { Image, StyleSheet, Platform, ScrollView } from 'react-native';
-import { HelloWave } from '@/components/HelloWave';
+import { StyleSheet, View } from 'react-native';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import EXERCISE_VARIATIONS from '@/constants/ExerciseVariations';
 
@@ -9,43 +8,39 @@ const exercises = [
   {
     name: 'Flat Bench Press',
     variation: DUMBBELL,
-    personalRecord: {
-      reps: 6,
-      weight: 100,
-    },
+    reps: 6,
+    weight: 100,
     dateAchieved: '11/20/2024',
   },
   {
     name: 'Flat Bench Press',
     variation: BARBELL,
-    personalRecord: {
-      reps: 6,
-      weight: 245,
-    },
+    reps: 6,
+    weight: 245,
     dateAchieved: '03/27/2024',
   },
   {
     name: 'Squats',
     variation: BARBELL,
-    personalRecord: {
-      reps: 10,
-      weight: 195,
-    },
+    reps: 10,
+    weight: 195,
     dateAchieved: '02/07/2023',
   },
   {
     name: 'Bicep Curl',
     variation: DUMBBELL,
-    personalRecord: {
-      reps: 10,
-      weight: 35,
-    },
+    reps: 10,
+    weight: 35,
     dateAchieved: '04/14/2024',
   },
 ];
 
 export default function HomeScreen() {
-  return <ExerciseList exercises={exercises} />;
+  return (
+    <View>
+      <ExerciseList exercises={exercises} />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
