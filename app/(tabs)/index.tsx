@@ -1,6 +1,6 @@
-import { View } from 'react-native';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
+import { PaperProvider } from 'react-native-paper';
 
 const exercises = [
   {
@@ -35,8 +35,8 @@ const exercises = [
 
 export default function HomeScreen() {
   return (
-    <View>
+    <PaperProvider>
       <ExerciseList exercises={exercises} />
-    </View>
+    </PaperProvider>
   );
 }
