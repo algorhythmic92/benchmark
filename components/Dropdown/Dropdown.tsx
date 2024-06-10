@@ -1,6 +1,5 @@
-import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Menu, Button } from 'react-native-paper';
 
 interface Props {
@@ -12,7 +11,6 @@ const Dropdown = ({ options }: Props) => {
   const openDropDown = () => setVisible(true);
   const closeDropDown = () => setVisible(false);
 
-  console.log('options: ' + options);
   return (
     <View>
       <Menu
@@ -23,10 +21,12 @@ const Dropdown = ({ options }: Props) => {
             icon='chevron-down'
             mode='contained-tonal'
             onPress={openDropDown}
-            style={{ width: 250 }}>
+            style={style.menuWidth}>
             Variation
           </Button>
-        }>
+        }
+        anchorPosition='bottom'
+        contentStyle={style.menuWidth}>
         {options.map((option) => (
           <Menu.Item
             onPress={() => {
@@ -39,5 +39,11 @@ const Dropdown = ({ options }: Props) => {
     </View>
   );
 };
+
+const style = StyleSheet.create({
+  menuWidth: {
+    width: 200,
+  },
+});
 
 export default Dropdown;
