@@ -6,6 +6,8 @@ import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import useLoadExercises from '@/hooks/useLoadExercise';
 import useAsyncStorageKeys from '@/hooks/useGetAllKeys';
+import Dropdown from '../Dropdown/Dropdown';
+import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
 
 interface Props {
   exercises: ExerciseProps[];
@@ -62,6 +64,7 @@ export default function ExerciseList({ exercises }: Props) {
         <Button mode='outlined' onPress={showModal}>
           Add New Exercise
         </Button>
+        <Dropdown options={Object.values(EXERCISE_VARIATION)} />
       </View>
       <Divider />
       <FlatList data={tempExercises} renderItem={renderExercise} />
