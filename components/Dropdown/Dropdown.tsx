@@ -1,4 +1,4 @@
-import useSetVisibility from '@/hooks/useShowHideComponent';
+import useSetVisibility from '@/hooks/useSetVisibility';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Menu, Button } from 'react-native-paper';
