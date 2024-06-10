@@ -1,39 +1,55 @@
-import { useState } from 'react';
+import useSetVisibility from '@/hooks/useShowHideComponent';
+import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Menu, Button } from 'react-native-paper';
 
 interface Props {
   options: string[];
+  setDropdownSelection: Dispatch<SetStateAction<string>>;
 }
 
-const Dropdown = ({ options }: Props) => {
-  const [visible, setVisible] = useState(false);
-  const openDropDown = () => setVisible(true);
-  const closeDropDown = () => setVisible(false);
+const Dropdown = ({ options, setDropdownSelection }: Props) => {
+  const {
+    visible,
+    show: openDropdown,
+    hide: closeDropdown,
+  } = useSetVisibility();
+
+  const useMenuItem = useCallback(
+    (option: string) => {
+      setDropdownSelection(option);
+      closeDropdown();
+    },
+    [setDropdownSelection, closeDropdown]
+  );
+
+  const menuItems = useMemo(
+    () =>
+      options.map((option) => ({
+        title: option,
+        onPress: () => useMenuItem(option),
+      })),
+    [options, useMenuItem]
+  );
 
   return (
     <View>
       <Menu
         visible={visible}
-        onDismiss={closeDropDown}
+        onDismiss={closeDropdown}
         anchor={
           <Button
             icon='chevron-down'
             mode='contained-tonal'
-            onPress={openDropDown}
+            onPress={openDropdown}
             style={style.menuWidth}>
             Variation
           </Button>
         }
         anchorPosition='bottom'
         contentStyle={style.menuWidth}>
-        {options.map((option) => (
-          <Menu.Item
-            onPress={() => {
-              console.log(`${option} pressed!`);
-            }}
-            title={option}
-          />
+        {menuItems.map(({ title, onPress }) => (
+          <Menu.Item onPress={onPress} title={title} />
         ))}
       </Menu>
     </View>

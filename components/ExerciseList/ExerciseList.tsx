@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { FlatList, View, ListRenderItem } from 'react-native';
-import { Divider, Text, Button, Portal, Modal } from 'react-native-paper';
+import {
+  Divider,
+  Text,
+  Button,
+  Portal,
+  Modal,
+  TextInput,
+} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
@@ -30,6 +37,8 @@ export default function ExerciseList({ exercises }: Props) {
   const { data, isLoading, error } = useLoadExercises(keys);
   const [tempExercises, setTempExercises] = useState(exercises);
   const [modalVisible, setModalVisible] = useState(false);
+  const [newExerciseName, setNewExerciseName] = useState('');
+  const [newExerciseVariation, setNewExerciseVariation] = useState('');
 
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
@@ -57,14 +66,17 @@ export default function ExerciseList({ exercises }: Props) {
           onDismiss={hideModal}
           style={{ padding: 20 }}
           contentContainerStyle={{ backgroundColor: 'white', padding: 20 }}>
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
+          <Dropdown
+            options={Object.values(EXERCISE_VARIATION)}
+            setDropdownSelection={setNewExerciseVariation}
+          />
+          <TextInput label='Name' value={newExerciseName} />
         </Modal>
       </Portal>
       <View style={{ padding: 10 }}>
         <Button mode='outlined' onPress={showModal}>
           Add New Exercise
         </Button>
-        <Dropdown options={Object.values(EXERCISE_VARIATION)} />
       </View>
       <Divider />
       <FlatList data={tempExercises} renderItem={renderExercise} />
