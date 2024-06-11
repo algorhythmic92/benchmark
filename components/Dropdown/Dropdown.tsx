@@ -57,7 +57,7 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
 
 const style = StyleSheet.create({
   fullWidth: {
-    width: '90%',
+    width: '80%',
   },
 });
 

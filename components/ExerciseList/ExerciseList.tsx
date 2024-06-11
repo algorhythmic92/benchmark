@@ -38,10 +38,21 @@ export default function ExerciseList({ exercises }: Props) {
   const [tempExercises, setTempExercises] = useState(exercises);
   const [modalVisible, setModalVisible] = useState(false);
   const [newExerciseName, setNewExerciseName] = useState('');
-  const [newExerciseVariation, setNewExerciseVariation] = useState('');
+  const [newExerciseVariation, setNewExerciseVariation] =
+    useState<EXERCISE_VARIATION>();
 
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
+  const addNewExercise = () =>
+    setTempExercises(
+      unshiftArray(tempExercises, {
+        variation: newExerciseVariation ?? EXERCISE_VARIATION.NONE,
+        name: newExerciseName,
+        weight: 0,
+        reps: 0,
+        dateAchieved: '',
+      })
+    );
 
   if (isLoading || areKeysLoading) {
     console.log('Loading...');
@@ -60,15 +71,31 @@ export default function ExerciseList({ exercises }: Props) {
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
-      <View style={{ padding: 10 }}>
-        <Text style={{ textAlign: 'center' }}>Add New Exercise</Text>
-        <View style={{ marginVertical: 10 }}>
-          <Dropdown
-            options={Object.values(EXERCISE_VARIATION)}
-            setDropdownSelection={setNewExerciseVariation}
+      <Portal>
+        <Modal
+          visible={modalVisible}
+          onDismiss={hideModal}
+          style={{ padding: 20 }}
+          contentContainerStyle={{ backgroundColor: 'white', padding: 20 }}>
+          <View style={{ marginBottom: 10 }}>
+            <Dropdown
+              options={Object.values(EXERCISE_VARIATION)}
+              setDropdownSelection={setNewExerciseVariation}
+            />
+          </View>
+          <TextInput
+            mode='outlined'
+            label='Name'
+            value={newExerciseName}
+            onChangeText={setNewExerciseName}
           />
-        </View>
-        <TextInput mode='outlined' label='Name' value={newExerciseName} />
+          <Button>Save</Button>
+        </Modal>
+      </Portal>
+      <View style={{ padding: 10 }}>
+        <Button mode='outlined' onPress={showModal}>
+          Add New Exercise
+        </Button>
       </View>
       <Divider />
       <FlatList data={tempExercises} renderItem={renderExercise} />
