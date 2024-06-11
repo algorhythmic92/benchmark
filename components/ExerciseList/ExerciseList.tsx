@@ -66,11 +66,13 @@ export default function ExerciseList({ exercises }: Props) {
           onDismiss={hideModal}
           style={{ padding: 20 }}
           contentContainerStyle={{ backgroundColor: 'white', padding: 20 }}>
-          <Dropdown
-            options={Object.values(EXERCISE_VARIATION)}
-            setDropdownSelection={setNewExerciseVariation}
-          />
-          <TextInput label='Name' value={newExerciseName} />
+          <View style={{ marginBottom: 10 }}>
+            <Dropdown
+              options={Object.values(EXERCISE_VARIATION)}
+              setDropdownSelection={setNewExerciseVariation}
+            />
+          </View>
+          <TextInput mode='outlined' label='Name' value={newExerciseName} />
         </Modal>
       </Portal>
       <View style={{ padding: 10 }}>

@@ -37,6 +37,7 @@ export default function Exercise({ exercise }: Props) {
           <Text>Personal Record: </Text>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
             <TextInput
+              mode='outlined'
               style={{ flex: 1, marginRight: 10 }}
               label='Weight'
               value={tempWeight}
@@ -46,6 +47,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              mode='outlined'
               style={{ flex: 1 }}
               label='Reps'
               value={tempReps}
@@ -62,6 +64,7 @@ export default function Exercise({ exercise }: Props) {
               paddingVertical: 10,
             }}>
             <TextInput
+              mode='outlined'
               style={{ marginRight: 5, flex: 1 }}
               label='Month'
               value={month}
@@ -72,6 +75,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              mode='outlined'
               style={{ marginRight: 5, flex: 1 }}
               label='Day'
               value={day}
@@ -82,6 +86,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              mode='outlined'
               style={{ flex: 1 }}
               label='Year'
               value={year}
