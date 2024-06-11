@@ -1,7 +1,7 @@
 import useSetVisibility from '@/hooks/useSetVisibility';
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Menu, Button } from 'react-native-paper';
+import { Menu, List, Button } from 'react-native-paper';
 
 interface Props {
   options: string[];
@@ -41,15 +41,14 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
           <Button
             icon='chevron-down'
             mode='contained-tonal'
-            onPress={openDropdown}
-            style={style.menuWidth}>
+            onPress={openDropdown}>
             Variation
           </Button>
         }
         anchorPosition='bottom'
-        contentStyle={style.menuWidth}>
+        style={style.fullWidth}>
         {menuItems.map(({ title, onPress }) => (
-          <Menu.Item onPress={onPress} title={title} />
+          <List.Item onPress={onPress} title={title} />
         ))}
       </Menu>
     </View>
@@ -57,8 +56,8 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
 };
 
 const style = StyleSheet.create({
-  menuWidth: {
-    width: 200,
+  fullWidth: {
+    width: '90%',
   },
 });
 

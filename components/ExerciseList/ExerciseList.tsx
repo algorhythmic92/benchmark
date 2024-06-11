@@ -60,25 +60,15 @@ export default function ExerciseList({ exercises }: Props) {
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
-      <Portal>
-        <Modal
-          visible={modalVisible}
-          onDismiss={hideModal}
-          style={{ padding: 20 }}
-          contentContainerStyle={{ backgroundColor: 'white', padding: 20 }}>
-          <View style={{ marginBottom: 10 }}>
-            <Dropdown
-              options={Object.values(EXERCISE_VARIATION)}
-              setDropdownSelection={setNewExerciseVariation}
-            />
-          </View>
-          <TextInput mode='outlined' label='Name' value={newExerciseName} />
-        </Modal>
-      </Portal>
       <View style={{ padding: 10 }}>
-        <Button mode='outlined' onPress={showModal}>
-          Add New Exercise
-        </Button>
+        <Text style={{ textAlign: 'center' }}>Add New Exercise</Text>
+        <View style={{ marginVertical: 10 }}>
+          <Dropdown
+            options={Object.values(EXERCISE_VARIATION)}
+            setDropdownSelection={setNewExerciseVariation}
+          />
+        </View>
+        <TextInput mode='outlined' label='Name' value={newExerciseName} />
       </View>
       <Divider />
       <FlatList data={tempExercises} renderItem={renderExercise} />
