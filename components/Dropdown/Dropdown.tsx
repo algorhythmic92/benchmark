@@ -9,7 +9,7 @@ interface Props {
   setDropdownSelection: Dispatch<SetStateAction<string>>;
 }
 
-function Dropdown<T>({ options, setDropdownSelection, label }: Props) {
+const Dropdown = ({ options, setDropdownSelection, label }: Props) => {
   const {
     visible,
     show: openDropdown,
@@ -52,7 +52,7 @@ function Dropdown<T>({ options, setDropdownSelection, label }: Props) {
       </Menu>
     </View>
   );
-}
+};
 
 const style = StyleSheet.create({
   fullWidth: {
