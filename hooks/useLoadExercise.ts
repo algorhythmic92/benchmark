@@ -5,7 +5,7 @@ import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 const useLoadExercises = (keys: readonly string[]) => {
   const [data, setData] = useState<ExerciseProps[] | null>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const loadExercises = async () => {

@@ -1,11 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FlatList, View, ListRenderItem } from 'react-native';
 import { Divider, Text, Button } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
-import useLoadExercises from '@/hooks/useLoadExercise';
-import useAsyncStorageKeys from '@/hooks/useGetAllKeys';
 import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
 import { useSetNewExerciseInfo } from '@/hooks/useSetNewExerciseInfo';
@@ -13,6 +11,8 @@ import { unshiftArray } from '@/util/array';
 
 interface Props {
   exercises: ExerciseProps[];
+  error: string;
+  isLoading: boolean;
 }
 
 export const renderExercise: ListRenderItem<ExerciseProps> = ({ item }) => (
@@ -31,13 +31,7 @@ const useExerciseListKeyExtractor = () => {
   return { exerciseListKeyExtractor };
 };
 
-export default function ExerciseList({ exercises }: Props) {
-  const {
-    keys,
-    isLoading: areKeysLoading,
-    error: keysError,
-  } = useAsyncStorageKeys();
-  const { data, isLoading, error } = useLoadExercises(keys);
+export default function ExerciseList({ exercises, isLoading, error }: Props) {
   const [tempExercises, setTempExercises] = useState(exercises);
   const {
     newExerciseName,
@@ -68,15 +62,17 @@ export default function ExerciseList({ exercises }: Props) {
     hideModal();
   };
 
-  if (isLoading || areKeysLoading) {
+  if (isLoading) {
     console.log('Loading...');
   }
 
-  if (error || keysError) {
+  if (error) {
     return <Text>Error: {error}</Text>;
   }
 
-  console.log('Exercises: ' + JSON.stringify(data));
+  useEffect(() => {
+    setTempExercises(exercises);
+  }, [tempExercises, setTempExercises]);
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
@@ -95,11 +91,26 @@ export default function ExerciseList({ exercises }: Props) {
         </Button>
       </View>
       <Divider />
-      <FlatList
-        data={tempExercises}
-        renderItem={renderExercise}
-        keyExtractor={exerciseListKeyExtractor}
-      />
+      {tempExercises?.length ? (
+        <FlatList
+          data={tempExercises}
+          renderItem={renderExercise}
+          keyExtractor={exerciseListKeyExtractor}
+        />
+      ) : (
+        <View
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+          }}>
+          <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 10 }}>
+            You don't have any exercises saved.
+          </Text>
+          <Text style={{ textAlign: 'center', fontSize: 16 }}>
+            Use the button above to add some!
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

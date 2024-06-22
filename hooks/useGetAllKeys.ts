@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 const useAsyncStorageKeys = () => {
   const [keys, setKeys] = useState<readonly string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchKeys = async () => {
