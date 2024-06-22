@@ -4,11 +4,12 @@ import { StyleSheet, View } from 'react-native';
 import { Menu, List, Button } from 'react-native-paper';
 
 interface Props {
+  label: string;
   options: string[];
   setDropdownSelection: Dispatch<SetStateAction<string>>;
 }
 
-const Dropdown = ({ options, setDropdownSelection }: Props) => {
+function Dropdown<T>({ options, setDropdownSelection, label }: Props) {
   const {
     visible,
     show: openDropdown,
@@ -23,14 +24,12 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
     [setDropdownSelection, closeDropdown]
   );
 
-  const menuItems = useMemo(
-    () =>
-      options.map((option) => ({
-        title: option,
-        onPress: () => useMenuItem(option),
-      })),
-    [options, useMenuItem]
-  );
+  const menuItems = useMemo(() => {
+    return options.map((option) => ({
+      title: option,
+      onPress: () => useMenuItem(option),
+    }));
+  }, [options, useMenuItem]);
 
   return (
     <View>
@@ -42,7 +41,7 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
             icon='chevron-down'
             mode='contained-tonal'
             onPress={openDropdown}>
-            Variation
+            {label}
           </Button>
         }
         anchorPosition='bottom'
@@ -53,7 +52,7 @@ const Dropdown = ({ options, setDropdownSelection }: Props) => {
       </Menu>
     </View>
   );
-};
+}
 
 const style = StyleSheet.create({
   fullWidth: {
