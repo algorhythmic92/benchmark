@@ -3,8 +3,7 @@ import { useState } from 'react';
 
 export const useSetNewExerciseInfo = () => {
   const [newExerciseName, setNewExerciseName] = useState('');
-  const [newExerciseVariation, setNewExerciseVariation] =
-    useState<EXERCISE_VARIATION>(EXERCISE_VARIATION.NONE);
+  const [newExerciseVariation, setNewExerciseVariation] = useState('');
 
   return {
     newExerciseName,

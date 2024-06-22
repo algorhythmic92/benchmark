@@ -22,7 +22,7 @@ export default function Exercise({ exercise }: Props) {
   const [year, setYear] = useState(yearValue);
   const saveExercise = useSaveExercise();
 
-  //Testing
+  console.log('Exercise: ', JSON.stringify(exercise));
 
   return (
     <View>
@@ -37,6 +37,7 @@ export default function Exercise({ exercise }: Props) {
           <Text>Personal Record: </Text>
           <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
             <TextInput
+              key={`${name}-weight`}
               mode='outlined'
               style={{ flex: 1, marginRight: 10 }}
               label='Weight'
@@ -47,6 +48,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              key={`${name}-reps`}
               mode='outlined'
               style={{ flex: 1 }}
               label='Reps'
@@ -64,6 +66,7 @@ export default function Exercise({ exercise }: Props) {
               paddingVertical: 10,
             }}>
             <TextInput
+              key={`${name}-month`}
               mode='outlined'
               style={{ marginRight: 5, flex: 1 }}
               label='Month'
@@ -75,6 +78,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              key={`${name}-day`}
               mode='outlined'
               style={{ marginRight: 5, flex: 1 }}
               label='Day'
@@ -86,6 +90,7 @@ export default function Exercise({ exercise }: Props) {
               }}
             />
             <TextInput
+              key={`${name}-year`}
               mode='outlined'
               style={{ flex: 1 }}
               label='Year'
