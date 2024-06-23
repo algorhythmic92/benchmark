@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View, ListRenderItem } from 'react-native';
-import { Divider, Text, Button } from 'react-native-paper';
+import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
@@ -8,6 +8,7 @@ import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
 import { useSetNewExerciseInfo } from '@/hooks/useSetNewExerciseInfo';
 import { unshiftArray } from '@/util/array';
+import ErrorComponent from '../Error/Error';
 
 interface Props {
   exercises: ExerciseProps[];
@@ -47,9 +48,6 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
   const { exerciseListKeyExtractor } = useExerciseListKeyExtractor();
 
   const addNewExercise = () => {
-    console.log('tempExercises: ' + JSON.stringify(tempExercises));
-    console.log('newExerciseVariation: ' + newExerciseVariation);
-    console.log('newExerciseName: ' + newExerciseName);
     setTempExercises(
       unshiftArray(tempExercises, {
         variation: newExerciseVariation,
@@ -62,17 +60,32 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
     hideModal();
   };
 
+  useEffect(() => {
+    setTempExercises(exercises);
+  }, [exercises]);
+
   if (isLoading) {
-    console.log('Loading...');
+    return (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size='large' />
+      </SafeAreaView>
+    );
   }
 
   if (error) {
-    return <Text>Error: {error}</Text>;
+    return (
+      <ErrorComponent
+        message={error}
+        onRetry={() => {
+          // fetchData
+          console.log('dismissed');
+        }}
+      />
+    );
   }
 
-  useEffect(() => {
-    setTempExercises(exercises);
-  }, [tempExercises, setTempExercises]);
+  console.log('error: ' + error);
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
