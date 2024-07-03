@@ -4,11 +4,16 @@ import { PaperProvider } from 'react-native-paper';
 import { useGetAllExercises } from '@/services/exercise/exercise.service';
 
 export default function HomeScreen() {
-  const { exercises, loading, error } = useGetAllExercises();
+  const { getAllExercises, exercises, loading, error } = useGetAllExercises();
 
   return (
     <PaperProvider>
-      <ExerciseList exercises={exercises} isLoading={loading} error={error} />
+      <ExerciseList
+        exercises={exercises}
+        isLoading={loading}
+        error={error}
+        getAllExercises={getAllExercises}
+      />
     </PaperProvider>
   );
 }

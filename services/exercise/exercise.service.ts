@@ -14,21 +14,25 @@ export const useGetAllExercises = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const getAllExercises = async () => {
+    try {
+      setLoading(true);
+      const data = await request<Exercise[]>(BASE_URL, 'GET');
+      setExercises(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch exercises');
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const data = await request<Exercise[]>(BASE_URL, 'GET');
-        console.log('data : ' + data);
-        setExercises(data);
-      } catch (err) {
-        setError('Failed to fetch exercises');
-      } finally {
-        setLoading(false);
-      }
-    })();
+    getAllExercises();
   }, []);
 
-  return { exercises, loading, error };
+  return { exercises, loading, error, getAllExercises };
 };
 
 export const useGetExerciseById = (id: number) => {

@@ -39,12 +39,9 @@ export default async function request<T>(
   }
 
   try {
-    console.log(`URL: ${url}`);
-    console.log(`fetchOptions: ${fetchOptions}`);
     const response = await fetch(url, fetchOptions);
     return await responseHandler(response);
   } catch (error) {
-    console.error('HTTP Request Failed', error);
     throw error;
   }
 }

@@ -14,6 +14,7 @@ interface Props {
   exercises: ExerciseProps[];
   error: string | null;
   isLoading: boolean;
+  getAllExercises: () => {};
 }
 
 export const renderExercise: ListRenderItem<ExerciseProps> = ({ item }) => (
@@ -32,7 +33,12 @@ const useExerciseListKeyExtractor = () => {
   return { exerciseListKeyExtractor };
 };
 
-export default function ExerciseList({ exercises, isLoading, error }: Props) {
+export default function ExerciseList({
+  exercises,
+  isLoading,
+  error,
+  getAllExercises,
+}: Props) {
   const [tempExercises, setTempExercises] = useState(exercises);
   const {
     newExerciseName,
@@ -80,7 +86,7 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
         message={error}
         onRetry={() => {
           // fetchData
-          console.log('dismissed');
+          getAllExercises();
         }}
       />
     );
