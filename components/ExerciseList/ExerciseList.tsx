@@ -12,7 +12,7 @@ import ErrorComponent from '../Error/Error';
 
 interface Props {
   exercises: ExerciseProps[];
-  error: string;
+  error: string | null;
   isLoading: boolean;
 }
 
@@ -50,6 +50,7 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
   const addNewExercise = () => {
     setTempExercises(
       unshiftArray(tempExercises, {
+        id: null,
         variation: newExerciseVariation,
         name: newExerciseName,
         weight: 0,

@@ -1,23 +1,14 @@
 import useAsyncStorageKeys from '@/hooks/useGetAllKeys';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import { PaperProvider } from 'react-native-paper';
-import useLoadExercises from '@/hooks/useLoadExercise';
+import { useGetAllExercises } from '@/services/exercise/exercise.service';
 
 export default function HomeScreen() {
-  const {
-    keys,
-    isLoading: areKeysLoading,
-    error: keysError,
-  } = useAsyncStorageKeys();
-  const { data, isLoading, error } = useLoadExercises(keys);
-  console.log('data: ', JSON.stringify(data));
+  const { exercises, loading, error } = useGetAllExercises();
+
   return (
     <PaperProvider>
-      <ExerciseList
-        exercises={data?.length ? data : []}
-        isLoading={isLoading || areKeysLoading}
-        error={error || keysError}
-      />
+      <ExerciseList exercises={exercises} isLoading={loading} error={error} />
     </PaperProvider>
   );
 }
