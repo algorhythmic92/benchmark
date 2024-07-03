@@ -14,19 +14,18 @@ export const useGetAllExercises = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const getAllExercises = async () => {
+  const getAllExercises = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await request<Exercise[]>(BASE_URL, 'GET');
       setExercises(data);
       setError(null);
     } catch (err) {
       setError('Failed to fetch exercises');
-      setLoading(false);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     getAllExercises();
@@ -89,6 +88,7 @@ export const useCreateExercise = () => {
         (response) => response.json()
       );
       setCreatedExercise(data);
+      setError(null);
     } catch (err) {
       setError('Failed to create exercise');
     } finally {
@@ -99,43 +99,41 @@ export const useCreateExercise = () => {
   return { createExercise, createdExercise, loading, error };
 };
 
-export const useUpdateExercise = (id: number) => {
+export const useUpdateExercise = () => {
   const [updatedExercise, setUpdatedExercise] = useState<Exercise | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const updateExercise = useCallback(
-    async (exerciseDetails: Partial<Exercise>) => {
-      setLoading(true);
-      try {
-        const response = await request<ApiResponse<Exercise>>(
-          `${BASE_URL}/:id`,
-          'PUT',
-          { pathParams: { id }, body: exerciseDetails },
-          async (response) => {
-            if (!response.ok) {
-              return {
-                data: null,
-                message: `Exercise with ID ${id} not found`,
-              };
-            }
-            const data = await response.json();
-            return { data };
+  const updateExercise = useCallback(async (exerciseDetails: Exercise) => {
+    console.log(JSON.stringify(exerciseDetails));
+    setLoading(true);
+    try {
+      const response = await request<ApiResponse<Exercise>>(
+        `${BASE_URL}/:id`,
+        'PUT',
+        { pathParams: { id: exerciseDetails.id }, body: exerciseDetails },
+        async (response) => {
+          if (!response.ok) {
+            return {
+              data: null,
+              message: `Exercise with ID ${exerciseDetails.id} not found`,
+            };
           }
-        );
-        if (response.data) {
-          setUpdatedExercise(response.data);
-        } else {
-          setError(response.message || 'Failed to update exercise');
+          const data = await response.json();
+          return { data };
         }
-      } catch (err) {
-        setError('Failed to update exercise');
-      } finally {
-        setLoading(false);
+      );
+      if (response.data) {
+        setUpdatedExercise(response.data);
+      } else {
+        setError(response.message || 'Failed to update exercise');
       }
-    },
-    [id]
-  );
+    } catch (err) {
+      setError('Failed to update exercise');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   return { updateExercise, updatedExercise, loading, error };
 };

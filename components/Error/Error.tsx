@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { Text, Button, IconButton } from 'react-native-paper';
 
 interface ErrorComponentProps {
-  message: string;
+  message: string | null;
   onRetry: () => void;
 }
 

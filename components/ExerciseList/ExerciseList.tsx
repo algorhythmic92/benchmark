@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View, ListRenderItem } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { FlatList, View } from 'react-native';
 import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
@@ -7,8 +7,11 @@ import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
 import { useSetNewExerciseInfo } from '@/hooks/useSetNewExerciseInfo';
-import { unshiftArray } from '@/util/array';
 import ErrorComponent from '../Error/Error';
+import {
+  useCreateExercise,
+  useUpdateExercise,
+} from '@/services/exercise/exercise.service';
 
 interface Props {
   exercises: ExerciseProps[];
@@ -16,14 +19,6 @@ interface Props {
   isLoading: boolean;
   getAllExercises: () => {};
 }
-
-export const renderExercise: ListRenderItem<ExerciseProps> = ({ item }) => (
-  <View style={{ marginVertical: 10 }}>
-    <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-      <Exercise exercise={item} />
-    </View>
-  </View>
-);
 
 const useExerciseListKeyExtractor = () => {
   const exerciseListKeyExtractor = useCallback(
@@ -39,7 +34,6 @@ export default function ExerciseList({
   error,
   getAllExercises,
 }: Props) {
-  const [tempExercises, setTempExercises] = useState(exercises);
   const {
     newExerciseName,
     newExerciseVariation,
@@ -52,26 +46,47 @@ export default function ExerciseList({
     hide: hideModal,
   } = useSetVisibility();
   const { exerciseListKeyExtractor } = useExerciseListKeyExtractor();
+  const {
+    createExercise,
+    loading: createExerciseLoading,
+    error: createExerciseError,
+  } = useCreateExercise();
+  const {
+    updateExercise,
+    loading: updateExerciseLoading,
+    error: updateExerciseError,
+  } = useUpdateExercise();
 
-  const addNewExercise = () => {
-    setTempExercises(
-      unshiftArray(tempExercises, {
-        id: null,
-        variation: newExerciseVariation,
-        name: newExerciseName,
-        weight: 0,
-        reps: 0,
-        dateAchieved: '',
-      })
-    );
+  const addNewExercise = useCallback(() => {
+    createExercise({
+      id: null,
+      variation: newExerciseVariation,
+      name: newExerciseName,
+      weight: 0,
+      reps: 0,
+      dateAchieved: new Date().toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      }),
+    });
+    getAllExercises();
     hideModal();
-  };
+  }, []);
+
+  const saveExercise = useCallback(
+    (exercise: ExerciseProps) => {
+      updateExercise(exercise);
+      getAllExercises();
+    },
+    [updateExercise]
+  );
 
   useEffect(() => {
-    setTempExercises(exercises);
-  }, [exercises]);
+    getAllExercises();
+  }, []);
 
-  if (isLoading) {
+  if (isLoading || createExerciseLoading || updateExerciseLoading) {
     return (
       <SafeAreaView
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -80,10 +95,10 @@ export default function ExerciseList({
     );
   }
 
-  if (error) {
+  if (error || createExerciseError || updateExerciseError) {
     return (
       <ErrorComponent
-        message={error}
+        message={error || createExerciseError || updateExerciseError}
         onRetry={() => {
           // fetchData
           getAllExercises();
@@ -109,10 +124,16 @@ export default function ExerciseList({
         </Button>
       </View>
       <Divider />
-      {tempExercises?.length ? (
+      {exercises?.length ? (
         <FlatList
-          data={tempExercises}
-          renderItem={renderExercise}
+          data={exercises}
+          renderItem={({ item }) => (
+            <View style={{ marginVertical: 10 }}>
+              <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
+                <Exercise exercise={item} updateExercise={saveExercise} />
+              </View>
+            </View>
+          )}
           keyExtractor={exerciseListKeyExtractor}
         />
       ) : (
