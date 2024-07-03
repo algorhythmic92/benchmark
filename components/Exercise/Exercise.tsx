@@ -22,8 +22,6 @@ export default function Exercise({ exercise }: Props) {
   const [year, setYear] = useState(yearValue);
   const saveExercise = useSaveExercise();
 
-  console.log('Exercise: ', JSON.stringify(exercise));
-
   return (
     <View>
       <Card>
@@ -43,7 +41,6 @@ export default function Exercise({ exercise }: Props) {
               label='Weight'
               value={tempWeight}
               onChangeText={(value) => {
-                console.log(value);
                 setWeight(value);
               }}
             />
@@ -73,7 +70,6 @@ export default function Exercise({ exercise }: Props) {
               value={month}
               defaultValue={monthValue}
               onChangeText={(value) => {
-                console.log(value);
                 setMonth(value);
               }}
             />
@@ -85,7 +81,6 @@ export default function Exercise({ exercise }: Props) {
               value={day}
               defaultValue={dayValue}
               onChangeText={(value) => {
-                console.log(value);
                 setDay(value);
               }}
             />
@@ -97,7 +92,6 @@ export default function Exercise({ exercise }: Props) {
               value={year}
               defaultValue={yearValue}
               onChangeText={(value) => {
-                console.log(value);
                 setYear(value);
               }}
             />

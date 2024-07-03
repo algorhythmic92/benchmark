@@ -92,8 +92,6 @@ export default function ExerciseList({
     );
   }
 
-  console.log('error: ' + error);
-
   return (
     <SafeAreaView style={{ padding: 10 }}>
       <ExerciseModal
