@@ -139,7 +139,7 @@ export default function ExerciseList() {
       <Divider />
       {exercises?.length ? (
         <FlatList
-          data={exercises}
+          data={exercises.slice().reverse()}
           renderItem={({ item }) => (
             <View style={{ marginVertical: 10 }}>
               <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
