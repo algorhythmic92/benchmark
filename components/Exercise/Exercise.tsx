@@ -1,5 +1,5 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Text, TextInput } from 'react-native-paper';
 import ExerciseProps from './interface/Exercise.interface';
 import ExerciseInterface from './interface/Exercise.interface';
@@ -80,7 +80,7 @@ export default function Exercise({ exercise, updateExercise }: Props) {
               label='Reps'
               value={tempReps}
               onChangeText={(value) => {
-                setReps(`${value}`);
+                setReps(value);
               }}
             />
           </View>

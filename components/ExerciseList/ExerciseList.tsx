@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,14 +11,8 @@ import ErrorComponent from '../Error/Error';
 import {
   useCreateExercise,
   useUpdateExercise,
+  useGetAllExercises,
 } from '@/services/exercise/exercise.service';
-
-interface Props {
-  exercises: ExerciseProps[];
-  error: string | null;
-  isLoading: boolean;
-  getAllExercises: () => {};
-}
 
 const useExerciseListKeyExtractor = () => {
   const exerciseListKeyExtractor = useCallback(
@@ -28,12 +22,18 @@ const useExerciseListKeyExtractor = () => {
   return { exerciseListKeyExtractor };
 };
 
-export default function ExerciseList({
-  exercises,
-  isLoading,
-  error,
-  getAllExercises,
-}: Props) {
+export default function ExerciseList() {
+  const {
+    exercises: fetchedExercises,
+    loading: fetching,
+    error: fetchError,
+    getAllExercises,
+  } = useGetAllExercises();
+
+  const [exercises, setExercises] = useState(fetchedExercises);
+  const [isLoading, setIsLoading] = useState(fetching);
+  const [error, setError] = useState(fetchError);
+
   const {
     newExerciseName,
     newExerciseVariation,
@@ -57,6 +57,18 @@ export default function ExerciseList({
     error: updateExerciseError,
   } = useUpdateExercise();
 
+  useEffect(() => {
+    getAllExercises();
+  }, []);
+
+  useEffect(() => {
+    if (!fetching && !fetchError) {
+      setExercises(fetchedExercises);
+    }
+    setIsLoading(fetching);
+    setError(fetchError);
+  }, [fetching, fetchedExercises, fetchError]);
+
   const addNewExercise = useCallback(() => {
     createExercise({
       id: null,
@@ -69,22 +81,26 @@ export default function ExerciseList({
         day: '2-digit',
         year: 'numeric',
       }),
+    }).then(() => {
+      getAllExercises();
+      hideModal();
     });
-    getAllExercises();
-    hideModal();
-  }, []);
+  }, [
+    createExercise,
+    newExerciseName,
+    newExerciseVariation,
+    getAllExercises,
+    hideModal,
+  ]);
 
   const saveExercise = useCallback(
     (exercise: ExerciseProps) => {
-      updateExercise(exercise);
-      getAllExercises();
+      updateExercise(exercise).then(() => {
+        getAllExercises();
+      });
     },
-    [updateExercise]
+    [updateExercise, getAllExercises]
   );
-
-  useEffect(() => {
-    getAllExercises();
-  }, []);
 
   if (isLoading || createExerciseLoading || updateExerciseLoading) {
     return (
@@ -99,10 +115,7 @@ export default function ExerciseList({
     return (
       <ErrorComponent
         message={error || createExerciseError || updateExerciseError}
-        onRetry={() => {
-          // fetchData
-          getAllExercises();
-        }}
+        onRetry={getAllExercises}
       />
     );
   }
