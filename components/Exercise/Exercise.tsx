@@ -1,28 +1,55 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { useState } from 'react';
 import { Button, Card, Text, TextInput } from 'react-native-paper';
 import ExerciseProps from './interface/Exercise.interface';
-import useSaveExercise from '@/hooks/useSaveExercise';
+import ExerciseInterface from './interface/Exercise.interface';
 
 interface Props {
   exercise: ExerciseProps;
+  updateExercise: (exercise: ExerciseInterface) => void;
 }
 
-export default function Exercise({ exercise }: Props) {
-  const { name, reps, weight, dateAchieved, variation } = exercise;
-  const dateSplit = dateAchieved.split('/');
-  const monthValue = dateSplit[0];
-  const dayValue = dateSplit[1];
-  const yearValue = dateSplit[2];
+export default function Exercise({ exercise, updateExercise }: Props) {
+  const { id, name, reps, weight, dateAchieved, variation } = exercise;
 
   const [tempWeight, setWeight] = useState(`${weight}`);
   const [tempReps, setReps] = useState(`${reps}`);
-  const [day, setDay] = useState(dayValue);
-  const [month, setMonth] = useState(monthValue);
-  const [year, setYear] = useState(yearValue);
-  const saveExercise = useSaveExercise();
+  const [day, setDay] = useState('');
+  const [month, setMonth] = useState('');
+  const [year, setYear] = useState('');
 
-  console.log('Exercise: ', JSON.stringify(exercise));
+  useEffect(() => {
+    const dateSplit = dateAchieved.split('/');
+    setMonth(dateSplit[0]);
+    setDay(dateSplit[1]);
+    setYear(dateSplit[2]);
+  }, [dateAchieved]);
+
+  useEffect(() => {
+    setWeight(`${weight}`);
+    setReps(`${reps}`);
+  }, [weight, reps]);
+
+  const onPressSave = useCallback(() => {
+    updateExercise({
+      id,
+      name,
+      variation,
+      weight: parseInt(tempWeight, 10),
+      reps: parseInt(tempReps, 10),
+      dateAchieved: `${month}/${day}/${year}`,
+    });
+  }, [
+    tempReps,
+    tempWeight,
+    day,
+    month,
+    year,
+    id,
+    name,
+    variation,
+    updateExercise,
+  ]);
 
   return (
     <View>
@@ -43,7 +70,6 @@ export default function Exercise({ exercise }: Props) {
               label='Weight'
               value={tempWeight}
               onChangeText={(value) => {
-                console.log(value);
                 setWeight(value);
               }}
             />
@@ -54,7 +80,7 @@ export default function Exercise({ exercise }: Props) {
               label='Reps'
               value={tempReps}
               onChangeText={(value) => {
-                setReps(`${value}`);
+                setReps(value);
               }}
             />
           </View>
@@ -71,9 +97,7 @@ export default function Exercise({ exercise }: Props) {
               style={{ marginRight: 5, flex: 1 }}
               label='Month'
               value={month}
-              defaultValue={monthValue}
               onChangeText={(value) => {
-                console.log(value);
                 setMonth(value);
               }}
             />
@@ -83,9 +107,7 @@ export default function Exercise({ exercise }: Props) {
               style={{ marginRight: 5, flex: 1 }}
               label='Day'
               value={day}
-              defaultValue={dayValue}
               onChangeText={(value) => {
-                console.log(value);
                 setDay(value);
               }}
             />
@@ -95,24 +117,12 @@ export default function Exercise({ exercise }: Props) {
               style={{ flex: 1 }}
               label='Year'
               value={year}
-              defaultValue={yearValue}
               onChangeText={(value) => {
-                console.log(value);
                 setYear(value);
               }}
             />
           </View>
-          <Button
-            onPress={() =>
-              saveExercise({
-                variation,
-                name,
-                weight: parseInt(tempWeight, 10),
-                reps: parseInt(tempReps, 10),
-                dateAchieved: `${day}/${month}/${year}`,
-              })
-            }
-            mode='contained-tonal'>
+          <Button onPress={onPressSave} mode='contained-tonal'>
             Save
           </Button>
         </Card.Content>

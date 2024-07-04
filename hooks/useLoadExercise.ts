@@ -15,11 +15,11 @@ const useLoadExercises = (keys: readonly string[]) => {
           JSON.parse(exerciseMatrixCell[1] || '')
         );
         setData(exercises);
-      } catch (err: any) {
-        console.log('Error loading exercises');
-        setError(err.message);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'An unknown error occured'
+        );
       } finally {
-        console.log('Finished loading exercises');
         setIsLoading(false);
       }
     };

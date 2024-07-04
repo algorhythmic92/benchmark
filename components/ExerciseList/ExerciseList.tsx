@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View, ListRenderItem } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Exercise from '@/components/Exercise/Exercise';
@@ -7,22 +7,12 @@ import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
 import { useSetNewExerciseInfo } from '@/hooks/useSetNewExerciseInfo';
-import { unshiftArray } from '@/util/array';
 import ErrorComponent from '../Error/Error';
-
-interface Props {
-  exercises: ExerciseProps[];
-  error: string;
-  isLoading: boolean;
-}
-
-export const renderExercise: ListRenderItem<ExerciseProps> = ({ item }) => (
-  <View style={{ marginVertical: 10 }}>
-    <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-      <Exercise exercise={item} />
-    </View>
-  </View>
-);
+import {
+  useCreateExercise,
+  useUpdateExercise,
+  useGetAllExercises,
+} from '@/services/exercise/exercise.service';
 
 const useExerciseListKeyExtractor = () => {
   const exerciseListKeyExtractor = useCallback(
@@ -32,8 +22,18 @@ const useExerciseListKeyExtractor = () => {
   return { exerciseListKeyExtractor };
 };
 
-export default function ExerciseList({ exercises, isLoading, error }: Props) {
-  const [tempExercises, setTempExercises] = useState(exercises);
+export default function ExerciseList() {
+  const {
+    exercises: fetchedExercises,
+    loading: fetching,
+    error: fetchError,
+    getAllExercises,
+  } = useGetAllExercises();
+
+  const [exercises, setExercises] = useState(fetchedExercises);
+  const [isLoading, setIsLoading] = useState(fetching);
+  const [error, setError] = useState(fetchError);
+
   const {
     newExerciseName,
     newExerciseVariation,
@@ -46,25 +46,63 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
     hide: hideModal,
   } = useSetVisibility();
   const { exerciseListKeyExtractor } = useExerciseListKeyExtractor();
-
-  const addNewExercise = () => {
-    setTempExercises(
-      unshiftArray(tempExercises, {
-        variation: newExerciseVariation,
-        name: newExerciseName,
-        weight: 0,
-        reps: 0,
-        dateAchieved: '',
-      })
-    );
-    hideModal();
-  };
+  const {
+    createExercise,
+    loading: createExerciseLoading,
+    error: createExerciseError,
+  } = useCreateExercise();
+  const {
+    updateExercise,
+    loading: updateExerciseLoading,
+    error: updateExerciseError,
+  } = useUpdateExercise();
 
   useEffect(() => {
-    setTempExercises(exercises);
-  }, [exercises]);
+    getAllExercises();
+  }, []);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!fetching && !fetchError) {
+      setExercises(fetchedExercises);
+    }
+    setIsLoading(fetching);
+    setError(fetchError);
+  }, [fetching, fetchedExercises, fetchError]);
+
+  const addNewExercise = useCallback(() => {
+    createExercise({
+      id: null,
+      variation: newExerciseVariation,
+      name: newExerciseName,
+      weight: 0,
+      reps: 0,
+      dateAchieved: new Date().toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+      }),
+    }).then(() => {
+      getAllExercises();
+      hideModal();
+    });
+  }, [
+    createExercise,
+    newExerciseName,
+    newExerciseVariation,
+    getAllExercises,
+    hideModal,
+  ]);
+
+  const saveExercise = useCallback(
+    (exercise: ExerciseProps) => {
+      updateExercise(exercise).then(() => {
+        getAllExercises();
+      });
+    },
+    [updateExercise, getAllExercises]
+  );
+
+  if (isLoading || createExerciseLoading || updateExerciseLoading) {
     return (
       <SafeAreaView
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -73,19 +111,14 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
     );
   }
 
-  if (error) {
+  if (error || createExerciseError || updateExerciseError) {
     return (
       <ErrorComponent
-        message={error}
-        onRetry={() => {
-          // fetchData
-          console.log('dismissed');
-        }}
+        message={error || createExerciseError || updateExerciseError}
+        onRetry={getAllExercises}
       />
     );
   }
-
-  console.log('error: ' + error);
 
   return (
     <SafeAreaView style={{ padding: 10 }}>
@@ -104,10 +137,16 @@ export default function ExerciseList({ exercises, isLoading, error }: Props) {
         </Button>
       </View>
       <Divider />
-      {tempExercises?.length ? (
+      {exercises?.length ? (
         <FlatList
-          data={tempExercises}
-          renderItem={renderExercise}
+          data={exercises.slice().reverse()}
+          renderItem={({ item }) => (
+            <View style={{ marginVertical: 10 }}>
+              <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
+                <Exercise exercise={item} updateExercise={saveExercise} />
+              </View>
+            </View>
+          )}
           keyExtractor={exerciseListKeyExtractor}
         />
       ) : (

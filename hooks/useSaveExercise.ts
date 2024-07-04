@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const saveExercise = async (exercise: ExerciseProps) => {
   const { variation, name } = exercise;
   try {
-    console.log('Storing item');
     await AsyncStorage.setItem(
       `${variation} ${name}`,
       JSON.stringify(exercise)

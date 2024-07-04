@@ -1,6 +1,5 @@
-import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
-
 export default interface Exercise {
+  id: number | null;
   name: string;
   variation: string;
   reps: number;

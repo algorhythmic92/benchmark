@@ -12,11 +12,9 @@ const useAsyncStorageKeys = () => {
         const allKeys = await AsyncStorage.getAllKeys();
         setKeys(allKeys);
       } catch (err: any) {
-        console.warn('Error loading keys');
         setError(err.message);
       } finally {
         setIsLoading(false);
-        console.log('Finished loading keys');
       }
     };
 
