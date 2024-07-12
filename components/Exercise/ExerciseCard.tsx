@@ -1,15 +1,27 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { Button, Card, Text, TextInput } from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Text,
+  TextInput,
+  IconButton,
+  MD3Colors,
+} from 'react-native-paper';
 import ExerciseProps from './interface/Exercise.interface';
 import ExerciseInterface from './interface/Exercise.interface';
 
 interface Props {
   exercise: ExerciseProps;
   updateExercise: (exercise: ExerciseInterface) => void;
+  deleteExercise: (id: number | null) => void;
 }
 
-export default function Exercise({ exercise, updateExercise }: Props) {
+export default function ExerciseCard({
+  exercise,
+  updateExercise,
+  deleteExercise,
+}: Props) {
   const { id, name, reps, weight, dateAchieved, variation } = exercise;
 
   const [tempWeight, setWeight] = useState(`${weight}`);
@@ -51,6 +63,10 @@ export default function Exercise({ exercise, updateExercise }: Props) {
     updateExercise,
   ]);
 
+  const onPressDelete = useCallback(() => {
+    deleteExercise(id);
+  }, [id, deleteExercise]);
+
   return (
     <View>
       <Card>
@@ -59,6 +75,16 @@ export default function Exercise({ exercise, updateExercise }: Props) {
           subtitle={variation}
           titleStyle={{ textAlign: 'center' }}
           subtitleStyle={{ textAlign: 'center' }}
+          style={{ paddingLeft: 0 }}
+          left={() => <View style={{ width: 0, height: 0 }}></View>}
+          right={() => (
+            <IconButton
+              icon='minus-circle'
+              iconColor={MD3Colors.error50}
+              size={20}
+              onPress={onPressDelete}
+            />
+          )}
         />
         <Card.Content style={{ padding: 5 }}>
           <Text>Personal Record: </Text>

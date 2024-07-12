@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Exercise from '@/components/Exercise/Exercise';
+import ExerciseCard from '@/components/Exercise/ExerciseCard';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
@@ -12,6 +12,7 @@ import {
   useCreateExercise,
   useUpdateExercise,
   useGetAllExercises,
+  useDeleteExercise,
 } from '@/services/exercise/exercise.service';
 
 const useExerciseListKeyExtractor = () => {
@@ -56,6 +57,12 @@ export default function ExerciseList() {
     loading: updateExerciseLoading,
     error: updateExerciseError,
   } = useUpdateExercise();
+  const {
+    deleteExercise,
+    loading: deleteExerciseLoading,
+    error: deleteExerciseError,
+    deleted,
+  } = useDeleteExercise();
 
   useEffect(() => {
     getAllExercises();
@@ -93,6 +100,15 @@ export default function ExerciseList() {
     hideModal,
   ]);
 
+  const removeExercise = useCallback(
+    (id: number | null) => {
+      deleteExercise(id).then(() => {
+        getAllExercises();
+      });
+    },
+    [deleteExercise, getAllExercises]
+  );
+
   const saveExercise = useCallback(
     (exercise: ExerciseProps) => {
       updateExercise(exercise).then(() => {
@@ -102,7 +118,12 @@ export default function ExerciseList() {
     [updateExercise, getAllExercises]
   );
 
-  if (isLoading || createExerciseLoading || updateExerciseLoading) {
+  if (
+    isLoading ||
+    createExerciseLoading ||
+    updateExerciseLoading ||
+    deleteExerciseLoading
+  ) {
     return (
       <SafeAreaView
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -111,7 +132,12 @@ export default function ExerciseList() {
     );
   }
 
-  if (error || createExerciseError || updateExerciseError) {
+  if (
+    error ||
+    createExerciseError ||
+    updateExerciseError ||
+    deleteExerciseError
+  ) {
     return (
       <ErrorComponent
         message={error || createExerciseError || updateExerciseError}
@@ -143,7 +169,11 @@ export default function ExerciseList() {
           renderItem={({ item }) => (
             <View style={{ marginVertical: 10 }}>
               <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-                <Exercise exercise={item} updateExercise={saveExercise} />
+                <ExerciseCard
+                  exercise={item}
+                  updateExercise={saveExercise}
+                  deleteExercise={removeExercise}
+                />
               </View>
             </View>
           )}
