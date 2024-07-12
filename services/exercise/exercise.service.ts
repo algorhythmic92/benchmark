@@ -138,12 +138,12 @@ export const useUpdateExercise = () => {
   return { updateExercise, updatedExercise, loading, error };
 };
 
-export const useDeleteExercise = (id: number) => {
+export const useDeleteExercise = () => {
   const [deleted, setDeleted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deleteExercise = useCallback(async () => {
+  const deleteExercise = useCallback(async (id: number | null) => {
     setLoading(true);
     try {
       const response = await request<ApiResponse<null>>(
@@ -157,17 +157,17 @@ export const useDeleteExercise = (id: number) => {
           return { data: null };
         }
       );
-      if (response.data === null) {
+      if (!response?.message) {
         setDeleted(true);
       } else {
-        setError(response.message || 'Failed to delete exercise');
+        setError(response?.message || 'Failed to delete exercise');
       }
     } catch (err) {
       setError('Failed to delete exercise');
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, []);
 
   return { deleteExercise, deleted, loading, error };
 };

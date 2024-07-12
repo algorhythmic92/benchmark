@@ -14,9 +14,14 @@ import ExerciseInterface from './interface/Exercise.interface';
 interface Props {
   exercise: ExerciseProps;
   updateExercise: (exercise: ExerciseInterface) => void;
+  deleteExercise: (id: number | null) => void;
 }
 
-export default function ExerciseCard({ exercise, updateExercise }: Props) {
+export default function ExerciseCard({
+  exercise,
+  updateExercise,
+  deleteExercise,
+}: Props) {
   const { id, name, reps, weight, dateAchieved, variation } = exercise;
 
   const [tempWeight, setWeight] = useState(`${weight}`);
@@ -58,6 +63,10 @@ export default function ExerciseCard({ exercise, updateExercise }: Props) {
     updateExercise,
   ]);
 
+  const onPressDelete = useCallback(() => {
+    deleteExercise(id);
+  }, [id, deleteExercise]);
+
   return (
     <View>
       <Card>
@@ -73,7 +82,7 @@ export default function ExerciseCard({ exercise, updateExercise }: Props) {
               icon='minus-circle'
               iconColor={MD3Colors.error50}
               size={20}
-              onPress={() => console.log('Pressed')}
+              onPress={onPressDelete}
             />
           )}
         />
