@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Exercise from '@/components/Exercise/Exercise';
+import ExerciseCard from '@/components/Exercise/ExerciseCard';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
 import ExerciseModal from '../ExerciseModal.tsx/ExerciseModal';
 import useSetVisibility from '@/hooks/useSetVisibility';
@@ -143,7 +143,7 @@ export default function ExerciseList() {
           renderItem={({ item }) => (
             <View style={{ marginVertical: 10 }}>
               <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-                <Exercise exercise={item} updateExercise={saveExercise} />
+                <ExerciseCard exercise={item} updateExercise={saveExercise} />
               </View>
             </View>
           )}
