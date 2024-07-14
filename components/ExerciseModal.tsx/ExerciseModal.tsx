@@ -6,6 +6,7 @@ import {
   TextInput,
 } from 'react-native-paper';
 import EXERCISE_VARIATION from '@/constants/ExerciseVariations';
+import { StyleSheet } from 'react-native';
 
 interface Props {
   visible: boolean;
@@ -31,23 +32,19 @@ const ExerciseModal = ({
       <Modal
         visible={visible}
         onDismiss={hide}
-        style={{ padding: 10 }}
-        contentContainerStyle={{
-          backgroundColor: 'white',
-          padding: 20,
-          borderRadius: 5,
-        }}>
+        style={styles.modal}
+        contentContainerStyle={styles.modalContentContainerStyle}>
         <SegmentedButtons
           value={newExerciseVariation}
           onValueChange={setNewExerciseVariation}
-          style={{ marginBottom: 10 }}
+          style={styles.segmentedButtons}
           buttons={Object.values(EXERCISE_VARIATION).map((variation) => ({
             value: variation,
             label: variation,
           }))}
         />
         <TextInput
-          style={{ marginBottom: 10 }}
+          style={styles.newExerciseTextInput}
           mode='outlined'
           label='Name'
           value={newExerciseName}
@@ -60,5 +57,16 @@ const ExerciseModal = ({
     </Portal>
   );
 };
+
+const styles = StyleSheet.create({
+  modal: { padding: 10 },
+  modalContentContainerStyle: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 5,
+  },
+  newExerciseTextInput: { marginBottom: 10 },
+  segmentedButtons: { marginBottom: 10 },
+});
 
 export default ExerciseModal;

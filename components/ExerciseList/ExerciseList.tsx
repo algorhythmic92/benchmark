@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, View } from 'react-native';
-import { Divider, Text, Button, ActivityIndicator } from 'react-native-paper';
+import { FlatList, StyleSheet, View } from 'react-native';
+import {
+  Divider,
+  Text,
+  Button,
+  ActivityIndicator,
+  useTheme,
+} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ExerciseCard from '@/components/Exercise/ExerciseCard';
 import ExerciseProps from '@/components/Exercise/interface/Exercise.interface';
@@ -125,8 +131,7 @@ export default function ExerciseList() {
     deleteExerciseLoading
   ) {
     return (
-      <SafeAreaView
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={styles.loadingContainer}>
         <ActivityIndicator size='large' />
       </SafeAreaView>
     );
@@ -147,7 +152,7 @@ export default function ExerciseList() {
   }
 
   return (
-    <SafeAreaView style={{ padding: 10 }}>
+    <SafeAreaView style={styles.container}>
       <ExerciseModal
         visible={isModalVisible}
         hide={hideModal}
@@ -157,8 +162,8 @@ export default function ExerciseList() {
         setNewExerciseVariation={setNewExerciseVariation}
         addNewExercise={addNewExercise}
       />
-      <View style={{ padding: 10 }}>
-        <Button mode='outlined' onPress={showModal}>
+      <View style={styles.addNewExerciseContainer}>
+        <Button mode='contained' onPress={showModal}>
           Add New Exercise
         </Button>
       </View>
@@ -167,28 +172,22 @@ export default function ExerciseList() {
         <FlatList
           data={exercises.slice().reverse()}
           renderItem={({ item }) => (
-            <View style={{ marginVertical: 10 }}>
-              <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
-                <ExerciseCard
-                  exercise={item}
-                  updateExercise={saveExercise}
-                  deleteExercise={removeExercise}
-                />
-              </View>
+            <View style={styles.exerciseCardContainer}>
+              <ExerciseCard
+                exercise={item}
+                updateExercise={saveExercise}
+                deleteExercise={removeExercise}
+              />
             </View>
           )}
           keyExtractor={exerciseListKeyExtractor}
         />
       ) : (
-        <View
-          style={{
-            height: '100%',
-            justifyContent: 'center',
-          }}>
-          <Text style={{ textAlign: 'center', fontSize: 16, marginBottom: 10 }}>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyContainerText}>
             You don't have any exercises saved.
           </Text>
-          <Text style={{ textAlign: 'center', fontSize: 16 }}>
+          <Text style={styles.emptyContainerCallToActionText}>
             Use the button above to add some!
           </Text>
         </View>
@@ -196,3 +195,13 @@ export default function ExerciseList() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  addNewExerciseContainer: { padding: 10 },
+  container: { padding: 10 },
+  emptyContainer: { height: '100%', justifyContent: 'center' },
+  emptyContainerCallToActionText: { textAlign: 'center', fontSize: 16 },
+  emptyContainerText: { textAlign: 'center', fontSize: 16, marginBottom: 10 },
+  exerciseCardContainer: { marginVertical: 20, paddingHorizontal: 5 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+});
