@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Button, IconButton } from 'react-native-paper';
+import { Text, Button, IconButton, useTheme } from 'react-native-paper';
 
 interface ErrorComponentProps {
   message: string | null;
@@ -11,15 +11,20 @@ const ErrorComponent: React.FC<ErrorComponentProps> = ({
   message,
   onRetry,
 }) => {
+  const theme = useTheme();
   return (
     <View style={styles.container}>
-      <IconButton icon='alert-circle-outline' size={60} iconColor='#f44336' />
+      <IconButton
+        icon='alert-circle-outline'
+        size={60}
+        iconColor={theme.colors.error}
+      />
       <Text style={styles.message}>{message}</Text>
       <Button
         mode='contained'
         onPress={onRetry}
         style={styles.button}
-        buttonColor='#f44336'>
+        buttonColor={theme.colors.error}>
         Try Again
       </Button>
     </View>

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   Button,
   Card,
   Text,
   TextInput,
   IconButton,
-  MD3Colors,
+  useTheme,
 } from 'react-native-paper';
 import ExerciseProps from './interface/Exercise.interface';
 import ExerciseInterface from './interface/Exercise.interface';
@@ -29,6 +29,7 @@ export default function ExerciseCard({
   const [day, setDay] = useState('');
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
+  const theme = useTheme();
 
   useEffect(() => {
     const dateSplit = dateAchieved.split('/');
@@ -75,24 +76,24 @@ export default function ExerciseCard({
           subtitle={variation}
           titleStyle={{ textAlign: 'center' }}
           subtitleStyle={{ textAlign: 'center' }}
-          style={{ paddingLeft: 0 }}
-          left={() => <View style={{ width: 0, height: 0 }}></View>}
+          style={styles.cardTitle}
+          left={() => <View></View>}
           right={() => (
             <IconButton
               icon='minus-circle'
-              iconColor={MD3Colors.error50}
+              iconColor={theme.colors.error}
               size={20}
               onPress={onPressDelete}
             />
           )}
         />
-        <Card.Content style={{ padding: 5 }}>
+        <Card.Content style={styles.cardContent}>
           <Text>Personal Record: </Text>
-          <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+          <View style={styles.weightRepInputs}>
             <TextInput
               key={`${name}-weight`}
               mode='outlined'
-              style={{ flex: 1, marginRight: 10 }}
+              style={styles.weightInput}
               label='Weight'
               value={tempWeight}
               onChangeText={(value) => {
@@ -102,7 +103,7 @@ export default function ExerciseCard({
             <TextInput
               key={`${name}-reps`}
               mode='outlined'
-              style={{ flex: 1 }}
+              style={styles.repInput}
               label='Reps'
               value={tempReps}
               onChangeText={(value) => {
@@ -111,16 +112,11 @@ export default function ExerciseCard({
             />
           </View>
           <Text>Date achieved:</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              paddingVertical: 10,
-            }}>
+          <View style={styles.dateInputs}>
             <TextInput
               key={`${name}-month`}
               mode='outlined'
-              style={{ marginRight: 5, flex: 1 }}
+              style={styles.monthInput}
               label='Month'
               value={month}
               onChangeText={(value) => {
@@ -130,7 +126,7 @@ export default function ExerciseCard({
             <TextInput
               key={`${name}-day`}
               mode='outlined'
-              style={{ marginRight: 5, flex: 1 }}
+              style={styles.dayInput}
               label='Day'
               value={day}
               onChangeText={(value) => {
@@ -140,7 +136,7 @@ export default function ExerciseCard({
             <TextInput
               key={`${name}-year`}
               mode='outlined'
-              style={{ flex: 1 }}
+              style={styles.yearInput}
               label='Year'
               value={year}
               onChangeText={(value) => {
@@ -148,7 +144,10 @@ export default function ExerciseCard({
               }}
             />
           </View>
-          <Button onPress={onPressSave} mode='contained-tonal'>
+          <Button
+            onPress={onPressSave}
+            mode='contained'
+            style={styles.saveButton}>
             Save
           </Button>
         </Card.Content>
@@ -156,3 +155,20 @@ export default function ExerciseCard({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardContent: { padding: 5 },
+  cardTitle: { paddingLeft: 0 },
+  dateInputs: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  dayInput: { marginRight: 5, flex: 1 },
+  monthInput: { marginRight: 5, flex: 1 },
+  repInput: { flex: 1 },
+  saveButton: { marginVertical: 5 },
+  weightInput: { flex: 1, marginRight: 10 },
+  weightRepInputs: { flexDirection: 'row', paddingVertical: 10 },
+  yearInput: { flex: 1 },
+});
