@@ -1,3 +1,4 @@
+import Login from '@/screens/Login/Login';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import { PaperProvider } from 'react-native-paper';
 
@@ -94,7 +95,7 @@ const darkTheme = {
 export default function HomeScreen() {
   return (
     <PaperProvider theme={lightTheme}>
-      <ExerciseList />
+      <Login />
     </PaperProvider>
   );
 }
