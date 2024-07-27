@@ -25,6 +25,7 @@ function Login({}) {
       <View style={{ padding: 20 }}>
         <TextInput
           mode='outlined'
+          autoCapitalize='none'
           style={{ marginBottom: 10 }}
           label='Username'
           value={username || ''}
@@ -32,6 +33,8 @@ function Login({}) {
         />
         <TextInput
           mode='outlined'
+          secureTextEntry={true}
+          autoCapitalize='none'
           style={{ marginBottom: 10 }}
           label='Password'
           value={password || ''}
